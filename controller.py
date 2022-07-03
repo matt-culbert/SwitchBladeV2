@@ -61,7 +61,7 @@ def SendCommand(beaconID):
     '''
     command = input("> ")
     client = UnaryClient()
-    result = client.get_url(message=command, ID=beaconID)
+    result = client.get_url(message=command, bID=beaconID)
     print(f'{result}')
 
 if __name__ == '__main__':
