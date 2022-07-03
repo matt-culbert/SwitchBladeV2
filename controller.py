@@ -65,6 +65,5 @@ def SendCommand(beaconID):
     print(f'{result}')
 
 if __name__ == '__main__':
-    client = UnaryClient()
-    result = client.get_url(message="Hello Server you there?")
-    print(f'{result}')
+    bID = input("> ")
+    SendCommand(bID)
