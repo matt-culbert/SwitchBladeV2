@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+//message BeaconStatusRequest {
+//    int32 beaconID = 1;
+//    int32 max_results = 2;
+//
+//}
+//
+//message BeaconStatus {
+//    int32 beaconID = 1;
+//    string output = 2;
+//
+//}
+//
+//service BeaconStatusCheck {
+//    rpc Update (BeaconStatusRequest) returns (BeaconStatus);
+//
+//}
+
+package unary;
+
+service Unary{
+  // A simple RPC.
+  //
+  // Obtains the MessageResponse at a given position.
+ rpc GetServerResponse(Message) returns (MessageResponse) {}
+
+}
+
+message Message{
+ int32  ID = 1;
+ string message = 2;
+}
+
+message MessageResponse{
+ string message = 1;
+ bool received = 2;
+}
