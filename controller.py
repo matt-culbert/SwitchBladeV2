@@ -4,8 +4,6 @@ import sys
 import grpc
 import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
-
-
 class UnaryClient(object):
     """
     Client for gRPC functionality
@@ -38,8 +36,6 @@ def BobTheBuilder():
     if buildmeabeacon == "win":
         with open("out.py", 'w') as f:
             f.write(Functemplates.WINCMDEXEC + '\n' + Functemplates.BASE)
-
-
 def FarmerPickles(PyFileName):
     buildmeaexe = input("Are we building a bin or an exe? >")
 
