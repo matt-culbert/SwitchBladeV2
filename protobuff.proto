@@ -28,7 +28,7 @@ service Unary{
 }
 
 message Message{
- int32  bID = 1;
+ string  bID = 1;
  string message = 2;
 }
 
