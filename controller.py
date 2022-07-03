@@ -26,9 +26,9 @@ class UnaryClient(object):
         """
         Client function to call the rpc for GetServerResponse
         """
-        message = pb2.Message(message=message, bID=beaconID)
+        message = pb2.Message(bID=beaconID, message=message)
         print(f'{message}')
-        return self.stub.GetServerResponse(message)
+        return self.stub.GetServerResponse(beaconID, message)
 
 def BobTheBuilder():
     buildmeabeacon = input("Are we building Win or Nix? >")
