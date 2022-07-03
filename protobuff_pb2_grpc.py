@@ -14,7 +14,7 @@ class UnaryStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetServerResponse = channel.stream_stream(
+        self.GetServerResponse = channel.unary_unary(
                 '/unary.Unary/GetServerResponse',
                 request_serializer=protobuff__pb2.Message.SerializeToString,
                 response_deserializer=protobuff__pb2.MessageResponse.FromString,
@@ -24,7 +24,7 @@ class UnaryStub(object):
 class UnaryServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def GetServerResponse(self, request_iterator, context):
+    def GetServerResponse(self, request, context):
         """A simple RPC.
 
         Obtains the MessageResponse at a given position.
@@ -36,7 +36,7 @@ class UnaryServicer(object):
 
 def add_UnaryServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetServerResponse': grpc.stream_stream_rpc_method_handler(
+            'GetServerResponse': grpc.unary_unary_rpc_method_handler(
                     servicer.GetServerResponse,
                     request_deserializer=protobuff__pb2.Message.FromString,
                     response_serializer=protobuff__pb2.MessageResponse.SerializeToString,
@@ -52,7 +52,7 @@ class Unary(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GetServerResponse(request_iterator,
+    def GetServerResponse(request,
             target,
             options=(),
             channel_credentials=None,
@@ -62,7 +62,7 @@ class Unary(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(request_iterator, target, '/unary.Unary/GetServerResponse',
+        return grpc.experimental.unary_unary(request, target, '/unary.Unary/GetServerResponse',
             protobuff__pb2.Message.SerializeToString,
             protobuff__pb2.MessageResponse.FromString,
             options, channel_credentials,
