@@ -22,11 +22,11 @@ class UnaryClient(object):
         # bind the client and the server
         self.stub = pb2_grpc.UnaryStub(self.channel)
 
-    def get_url(self, message):
+    def get_url(self, message, beaconID):
         """
         Client function to call the rpc for GetServerResponse
         """
-        message = pb2.Message(message=message)
+        message = pb2.Message(message=message, bID=beaconID)
         print(f'{message}')
         return self.stub.GetServerResponse(message)
 
