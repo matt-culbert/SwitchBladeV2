@@ -5,7 +5,7 @@ syntax = "proto3";
 //    int32 max_results = 2;
 //
 //}
-//
+// 
 //message BeaconStatus {
 //    int32 beaconID = 1;
 //    string output = 2;
