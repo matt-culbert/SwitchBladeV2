@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fprotobuff.proto\x12\x05unary\"&\n\x07Message\x12\n\n\x02ID\x18\x01 \x01(\x05\x12\x0f\n\x07message\x18\x02 \x01(\t\"4\n\x0fMessageResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x10\n\x08received\x18\x02 \x01(\x08\x32\x46\n\x05Unary\x12=\n\x11GetServerResponse\x12\x0e.unary.Message\x1a\x16.unary.MessageResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fprotobuff.proto\x12\x05unary\"\'\n\x07Message\x12\x0b\n\x03\x62ID\x18\x01 \x01(\x05\x12\x0f\n\x07message\x18\x02 \x01(\t\"4\n\x0fMessageResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x10\n\x08received\x18\x02 \x01(\x08\x32\x46\n\x05Unary\x12=\n\x11GetServerResponse\x12\x0e.unary.Message\x1a\x16.unary.MessageResponse\"\x00\x62\x06proto3')
 
 
 
@@ -39,9 +39,9 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   _MESSAGE._serialized_start=26
-  _MESSAGE._serialized_end=64
-  _MESSAGERESPONSE._serialized_start=66
-  _MESSAGERESPONSE._serialized_end=118
-  _UNARY._serialized_start=120
-  _UNARY._serialized_end=190
+  _MESSAGE._serialized_end=65
+  _MESSAGERESPONSE._serialized_start=67
+  _MESSAGERESPONSE._serialized_end=119
+  _UNARY._serialized_start=121
+  _UNARY._serialized_end=191
 # @@protoc_insertion_point(module_scope)
