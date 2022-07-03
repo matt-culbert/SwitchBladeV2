@@ -26,7 +26,7 @@ class UnaryClient(object):
         """
         message = pb2.Message(bID=beaconID, message=message)
         print(f'{message}')
-        return self.stub.GetServerResponse(beaconID, message)
+        return self.stub.GetServerResponse(message)
 def BobTheBuilder():
     buildmeabeacon = input("Are we building Win or Nix? >")
 
