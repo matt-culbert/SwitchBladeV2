@@ -45,12 +45,14 @@ class RunFlask(pb2_grpc.UnaryServicer):
     def index(self, filename):
         if request.method == 'GET':
             val = {request.headers['APPSESSIONID']}
-            print(f'Host {val} grabbed command')
+            stats = f'Host {val} grabbed command'
             return send_from_directory('.', filename)
+            result = {'message': stats, 'received': True}
+            return pb2.MessageResponse(**result)
 
         return jsonify(request.data)
 
-    @app.route("/<path:filename>",methods = ['POST'])
+    @app.route("/<path:filename>",methods=['POST'])
     def results(self):
         if request.method == 'POST':
             val = {request.headers['APPSESSIONID']}
