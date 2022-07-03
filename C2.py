@@ -47,8 +47,8 @@ class RunFlask(pb2_grpc.UnaryServicer):
             val = {request.headers['APPSESSIONID']}
             stats = f'Host {val} grabbed command'
             return send_from_directory('.', filename)
-            result = {'message': stats, 'received': True}
-            return pb2.MessageResponse(**result)
+            #result = {'message': stats, 'received': True}
+            #return pb2.MessageResponse(**result)
 
         return jsonify(request.data)
 
