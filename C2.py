@@ -18,17 +18,22 @@ class RunFlask(pb2_grpc.UnaryServicer):
         message = request.message
         ID = request.bID
         opt = request.opt
-        if opt == 'SC':
-            f = open(f"/var/www/html/{ID}.html", "a")
-            f.write(message)
-            f.close()
-            result = f'Received command, wrote {message} to file {ID}'
-            result = {'message': result, 'received': True}
-            return pb2.MessageResponse(**result)
-        elif opt == 'GR':
-            result = f'Getting status of beacon {ID}'
-            result = {'message': self.response, 'received': True}
-            return pb2.MessageResponse(**result)
+        if set(ID).difference(ascii_letters + digits):
+            # We're not going to bother with input sanitization here
+            # If we receive special characters just drop it entirely
+            pass
+        else:
+            if opt == 'SC':
+                f = open(f"/var/www/html/{ID}.html", "a")
+                f.write(message)
+                f.close()
+                result = f'Received command, wrote {message} to file {ID}'
+                result = {'message': result, 'received': True}
+                return pb2.MessageResponse(**result)
+            elif opt == 'GR':
+                result = f'Getting status of beacon {ID}'
+                result = {'message': self.response, 'received': True}
+                return pb2.MessageResponse(**result)
 
     @app.route("/")
     def home(self):
@@ -66,7 +71,6 @@ class RunFlask(pb2_grpc.UnaryServicer):
             self.response = request.data
             return 'HELO'
 
-
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     pb2_grpc.add_UnaryServicer_to_server(RunFlask(), server)
@@ -74,7 +78,6 @@ def serve():
     server.start()
     app.run(debug=True)
     server.wait_for_termination()
-
 
 if __name__ == "__main__":
     serve()
