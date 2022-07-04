@@ -7,7 +7,6 @@ import protobuff_pb2 as pb2
 
 app = Flask(__name__)
 
-
 class RunFlask(pb2_grpc.UnaryServicer):
     def __init__(self, *args, **kwargs):
         self.response = ''
