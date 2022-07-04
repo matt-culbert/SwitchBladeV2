@@ -20,11 +20,11 @@ class UnaryClient(object):
         # bind the client and the server
         self.stub = pb2_grpc.UnaryStub(self.channel)
 
-    def get_url(self, message, beaconID):
+    def get_url(self, message, beaconID, opt):
         """
         Client function to call the rpc for GetServerResponse
         """
-        message = pb2.Message(bID=beaconID, message=message)
+        message = pb2.Message(bID=beaconID, message=message, opt=opt)
         print(f'{message}')
         return self.stub.GetServerResponse(message)
 def BobTheBuilder():
@@ -54,6 +54,7 @@ def SendCommand(beaconID):
     :return: Get the result of the command
     '''
     command = input("> ")
+    opt = input("> ")
     client = UnaryClient()
     result = client.get_url(message=command, beaconID=beaconID)
     print(f'{result}')
