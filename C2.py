@@ -38,7 +38,7 @@ class RunFlask(pb2_grpc.UnaryServicer):
     def home(self):
         # Grab the appsessionid value from the headers
         val = request.headers['APPSESSIONID']
-        if set(val).difference(ascii_letters + digits):
+        if set(val).difference(ascii_letters + digits + '-'):
             # We're not going to bother with input sanitization here
             # If we receive special characters just drop it entirely
             pass
