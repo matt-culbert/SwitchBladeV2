@@ -56,7 +56,7 @@ def SendCommand(beaconID):
     command = input("> ")
     opt = input("> ")
     client = UnaryClient()
-    result = client.get_url(message=command, beaconID=beaconID)
+    result = client.get_url(message=command, beaconID=beaconID, opt=opt)
     print(f'{result}')
 
 if __name__ == '__main__':
