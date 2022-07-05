@@ -36,8 +36,8 @@ class UnaryService(pb2_grpc.UnaryServicer):
             elif opt == 'GR':
                 # If option is to get the returned results of a beacon, page the SQL? DB for the results
                 res = conn.hgetall(ID)
-                result = f'Getting status of beacon {ID}'
-                result = {'message': res, 'received': True}
+                result = f'Getting status of beacon {ID}: {res}'
+                result = {'message': result, 'received': True}
                 return pb2.MessageResponse(**result)
 
 
