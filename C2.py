@@ -5,6 +5,7 @@ import time
 import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
 import redis
+import string
 
 conn = redis.Redis('localhost')
 app = Flask(__name__)
@@ -19,7 +20,7 @@ class UnaryService(pb2_grpc.UnaryServicer):
         message = request.message
         ID = request.bID
         opt = request.opt
-        if set(ID).difference(ascii_letters + digits):
+        if set(ID).difference(string.ascii_letters + string.digits):
             # We're not going to bother with input sanitization here
             # If we receive special characters just drop it entirely
             pass
@@ -33,15 +34,16 @@ class UnaryService(pb2_grpc.UnaryServicer):
                     return pb2.MessageResponse(**result)
             elif opt == 'GR':
                 # If option is to get the returned results of a beacon, page the SQL? DB for the results
+                res = conn.hgetall(ID)
                 result = f'Getting status of beacon {ID}'
-                result = {'message': conn.hgetall(ID), 'received': True}
+                result = {'message': conn.hgetall(res), 'received': True}
                 return pb2.MessageResponse(**result)
 
 @app.route("/")
 def home():
     # Grab the appsessionid value from the headers
     val = request.headers['APPSESSIONID']
-    if set(val).difference(ascii_letters + digits):
+    if set(val).difference(string.ascii_letters + string.digits):
         # We're not going to bother with input sanitization here
         # If we receive special characters just drop it entirely
         pass
@@ -49,7 +51,7 @@ def home():
         message = "cmd;whoami;null "
         print(f'headers:{val}')
         # create a new page for the UUID we got from the headers
-        with open (f"/var/www/html/{val}.html", "a") as f
+        with open (f"{val}.html", "a") as f:
             f.write(message)
         return ('')
 
