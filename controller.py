@@ -53,12 +53,12 @@ def SendCommand(beaconID):
     :param beaconID: The beacon we want to target
     :return: Get the result of the command
     '''
-    command = input("> ")
-    opt = input("> ")
+    command = input("If setting new command > ")
+    opt = input("Get Results (GR) or Set Command (SC) > ")
     client = UnaryClient()
     result = client.get_url(message=command, beaconID=beaconID, opt=opt)
     print(f'{result}')
 
 if __name__ == '__main__':
-    bID = input("> ")
+    bID = input("Input beacon ID > ")
     SendCommand(bID)
