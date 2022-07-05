@@ -80,14 +80,18 @@ def index(filename):
     return jsonify(request.data)
 
 
-@app.route("/<path:filename>", methods=['POST'])
+@app.route("/schema", methods=['POST'])
 def results():
     if request.method == 'POST':
-        val = {request.headers['APPSESSIONID']}
-        print(f'Result: {request.data} from beacon: {val}')
+        bID = {request.headers['APPSESSIONID']}
+        bID = str(bID)
+        bID = re.sub('[^A-Za-z0-9]+', '', bID)
+        total = f'Result: {request.data} from beacon: {bID}'
         response = request.data
-        bacon = {"bID": val, "Returned data": response}
-        conn.hmset("beacons", bacon)
+        response = str(response)
+        response = response.strip()
+        print(response)
+        conn.hset("beacons", bID, total)
 
         return 'HELO'
 

