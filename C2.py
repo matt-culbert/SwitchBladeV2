@@ -4,10 +4,10 @@ from concurrent import futures
 import time
 import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
-import redis
+import redis # Make sure to install and start the redis server
 import string
 
-conn = redis.Redis('localhost')
+conn = redis.StrictRedis(host='localhost', port=6379, db=0)
 app = Flask(__name__)
 
 
@@ -34,8 +34,8 @@ class UnaryService(pb2_grpc.UnaryServicer):
                 result = {'message': result, 'received': True}
                 return pb2.MessageResponse(**result)
             elif opt == 'GR':
-                # If option is to get the returned results of a beacon, page the SQL? DB for the results
-                res = conn.hgetall(ID)
+                # If option is to get the returned results of a beacon, page the Redis DB for the results
+                res = conn.hget('beacons', f'{ID}')
                 result = f'Getting status of beacon {ID}: {res}'
                 result = {'message': result, 'received': True}
                 return pb2.MessageResponse(**result)
@@ -61,11 +61,14 @@ def home():
 @app.route('/<path:filename>', methods=['GET', 'POST'])
 def index(filename):
     if request.method == 'GET':
-        val = {request.headers['APPSESSIONID']}
-        stats = f'Host {val} grabbed command'
+        bID = {request.headers['APPSESSIONID']}
+        stats = f'Host {bID} grabbed command'
+        with open (f'{bID}.html') as f:
+            content=f.readlines()
+        for line in content:
+            cmd = line
         return send_from_directory('.', filename)
-        bacon = {"bID": val, "Got command": "X"}
-        conn.hmset("pythonDict", bacon)
+        conn.hset("beacons", f'{bID}', f'{cmd}')
 
     return jsonify(request.data)
 
