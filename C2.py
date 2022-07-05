@@ -19,19 +19,18 @@ class UnaryService(pb2_grpc.UnaryServicer):
         message = request.message
         ID = request.bID
         opt = request.opt
-        if set(ID).difference(ascii_letters + digits + '-'):
+        if set(ID).difference(ascii_letters + digits):
             # We're not going to bother with input sanitization here
             # If we receive special characters just drop it entirely
             pass
         else:
             if opt == 'SC':
                 # If option is to set command, then write it to the file
-                f = open(f"/var/www/html/{ID}.html", "a")
-                f.write(message)
-                f.close()
-                result = f'Received command, wrote {message} to file {ID}'
-                result = {'message': result, 'received': True}
-                return pb2.MessageResponse(**result)
+                with open ("{ID}.html", "a") as f:
+                    f.write(message)
+                    result = f'Received command, wrote {message} to file {ID}'
+                    result = {'message': result, 'received': True}
+                    return pb2.MessageResponse(**result)
             elif opt == 'GR':
                 # If option is to get the returned results of a beacon, page the SQL? DB for the results
                 result = f'Getting status of beacon {ID}'
@@ -42,17 +41,16 @@ class UnaryService(pb2_grpc.UnaryServicer):
 def home():
     # Grab the appsessionid value from the headers
     val = request.headers['APPSESSIONID']
-    if set(val).difference(ascii_letters + digits + '-'):
+    if set(val).difference(ascii_letters + digits):
         # We're not going to bother with input sanitization here
         # If we receive special characters just drop it entirely
         pass
     else:
-        message = b"cmd;whoami;null "
+        message = "cmd;whoami;null "
         print(f'headers:{val}')
         # create a new page for the UUID we got from the headers
-        f = open(f"/var/www/html/{val}.html", "a")
-        f.write(message)
-        f.close()
+        with open (f"/var/www/html/{val}.html", "a") as f
+            f.write(message)
         return ('')
 
 @app.route('/<path:filename>', methods=['GET', 'POST'])
