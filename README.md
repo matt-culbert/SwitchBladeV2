@@ -19,3 +19,4 @@ python -m grpc_tools.protoc --proto_path=. ./protobuff.proto --python_out=. --gr
 - [ ] Maintain a full history of commands issued to each beacon
 - [ ] Add SMB communication
 - [ ] Add SMB proxying for reaching isolated VLANs
+- [x] Add mTLS
