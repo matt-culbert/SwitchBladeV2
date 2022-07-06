@@ -61,7 +61,7 @@ def home():
         return ('')
 
 
-@app.route('/iso/<path:filename>', methods=['GET'])
+@app.route('/<path:filename>', methods=['GET'])
 def index(filename):
     if request.method == 'GET':
         bID = {request.headers['APPSESSIONID']}
