@@ -16,6 +16,6 @@ python -m grpc_tools.protoc --proto_path=. ./protobuff.proto --python_out=. --gr
 
 # To Do #
 - [ ] Encrypting/signing commands to prevent unauthorized commands being issued
-- [ ] Maintane a full history of commands issued to each beacon
+- [ ] Maintain a full history of commands issued to each beacon
 - [ ] Add SMB communication
 - [ ] Add SMB proxying for reaching isolated VLANs
