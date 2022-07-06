@@ -1,4 +1,4 @@
-import base64
+import datetime
 from flask import *
 import re
 import grpc
@@ -41,6 +41,13 @@ class UnaryService(pb2_grpc.UnaryServicer):
                 result = f'Getting status of beacon {ID}: {res}'
                 result = {'message': result, 'received': True}
                 return pb2.MessageResponse(**result)
+            elif opt == 'GA':
+                res = conn.hgetall('beacons')
+                res = str(res)
+                result = f'Getting all beacon data: {res}'
+                result = {'message': result, 'received': True}
+                return pb2.MessageResponse(**result)
+            else: pass
 
 
 @app.route("/")
@@ -73,8 +80,9 @@ def index(filename):
         for line in content:
             cmd = line
         conn.hset('beacons', f'{bID}', f'{cmd}') # Add the beacon ID and command to the redis DB
-        conn.hset('beacons', f'{bID}', f'{name}')
-        conn.hgetall('beacons')
+        date = datetime.datetime.now()
+        conn.hset('beacons', f'{date}', f'{bID} + {cmd}') # Create cmd history
+        conn.hset('beacons', f'{name}', f'{bID}')
         return send_from_directory('.', filename)
     return jsonify(request.data)
 
