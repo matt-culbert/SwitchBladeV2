@@ -45,11 +45,17 @@ def BobTheBuilder():
     buildmeabeacon.lower()
 
     if buildmeabeacon == "win":
+        func1 = Functemplates.WINCMDEXEC
+        func1.replace("GENERATEFUNC1", foodah)
+        func2 = Functemplates.BASE
+        func2.replace("GENERATEFUNC1", foodah)
         with open("out.py", 'w') as f:
             f.write(Functemplates.WINCMDEXEC + '\n' + Functemplates.BASE)
     if buildmeabeacon == "nix":
         func1 = Functemplates.NIXCMDEXEC
         func1.replace("GENERATEFUNC1", foodah)
+        func2 = Functemplates.BASE
+        func2.replace("GENERATEFUNC1", foodah)
         with open("out.py", "w") as f:
             f.write(Functemplates.NIXCMDEXEC + '\n' + Functemplates.BASE)
 
