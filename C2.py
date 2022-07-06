@@ -3,7 +3,6 @@ from flask import *
 import re
 import grpc
 from concurrent import futures
-import time
 import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
 import redis  # Make sure to install and start the redis server
