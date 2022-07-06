@@ -29,7 +29,7 @@ class UnaryService(pb2_grpc.UnaryServicer):
         else:
             if opt == 'SC':
                 # If option is to set command, then write it to the file
-                with open(f"iso/{ID}.html", "w") as f: # We're keeping the html files in another folder, e z clean up
+                with open(f"{ID}.html", "w") as f: # We're keeping the html files in another folder, e z clean up
                     f.write(message)
                 result = f'Received command, wrote {message} to file {ID}'
                 result = {'message': result, 'received': True}
