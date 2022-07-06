@@ -4,6 +4,12 @@ import sys
 import grpc
 import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
+import random, string
+
+def randomword(length):
+   letters = string.ascii_lowercase
+
+   return ''.join(random.choice(letters) for i in range(length))
 
 
 class UnaryClient(object):
@@ -32,6 +38,8 @@ class UnaryClient(object):
 
 
 def BobTheBuilder():
+    foodah = randomword(10)
+
     buildmeabeacon = input("Are we building Win or Nix? >")
 
     buildmeabeacon.lower()
@@ -39,7 +47,11 @@ def BobTheBuilder():
     if buildmeabeacon == "win":
         with open("out.py", 'w') as f:
             f.write(Functemplates.WINCMDEXEC + '\n' + Functemplates.BASE)
-
+    if buildmeabeacon == "nix":
+        func1 = Functemplates.NIXCMDEXEC
+        func1.replace("GENERATEFUNC1", foodah)
+        with open("out.py", "w") as f:
+            f.write(Functemplates.NIXCMDEXEC + '\n' + Functemplates.BASE)
 
 def FarmerPickles(PyFileName):
     buildmeaexe = input("Are we building a bin or an exe? >")

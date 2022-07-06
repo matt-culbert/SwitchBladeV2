@@ -69,7 +69,7 @@ def index(filename):
         print(f'Host {bID} grabbed command')
         bID = str(bID)
         bID = re.sub('[^A-Za-z0-9]+', '', bID) # We are removing special characters
-        with open(f'{bID}.html') as f:
+        with open(f'iso/{bID}.html') as f:
             content = f.readlines()
         for line in content:
             cmd = line
@@ -92,7 +92,6 @@ def results():
         response = response.strip()
         print(response)
         conn.hset("beacons", bID, total)
-
         return 'HELO'
 
 
