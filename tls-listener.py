@@ -107,7 +107,7 @@ def serve():
     pb2_grpc.add_UnaryServicer_to_server(UnaryService(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
-    app.run(debug=True)
+    app.run(ssl_context='adhoc')
     server.wait_for_termination()
 
 
