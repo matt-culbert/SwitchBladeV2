@@ -62,6 +62,7 @@ def BobTheBuilder():
         with open("out.py", "w") as f:
             f.write(Functemplates.NIXCMDEXEC + '\n' + Functemplates.BASE)
 
+
 def FarmerPickles(PyFileName):
     buildmeaexe = input("Are we building a bin or an exe? >")
 
