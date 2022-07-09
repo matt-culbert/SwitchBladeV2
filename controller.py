@@ -94,8 +94,18 @@ def SendCommand():
 def startListener():
     subprocess.Popen('tls-listener.py', close_fds=True)
 
+
 def startMTLS():
     subprocess.Popen('systemctl start nginx', close_fds=True)
+
+
+def stagedDropper(beacon, outfile):
+    # Get the bytes value of our beacon
+    # Write the bytes to an html file
+    # Host it with python? or flask?
+    # Dropper grabs the bytes and writes to disk
+    with open(beacon, "rb") as fin, open(outfile, 'wb') as fout:
+        fout.write(fin.read())
 
 
 if __name__ == '__main__':
