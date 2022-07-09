@@ -1,5 +1,4 @@
 import subprocess
-
 import Functemplates
 import os
 import sys
@@ -8,6 +7,7 @@ import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
 import random
 import string
+
 
 def randomword(length):
    letters = string.ascii_lowercase
