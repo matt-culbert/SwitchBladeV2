@@ -83,6 +83,8 @@ def index(filename):
         date = datetime.datetime.now()
         conn.hset('beacons', f'{date}', f'{bID} + {cmd}') # Create cmd history
         conn.hset('beacons', f'{name}', f'{bID}')
+        # Let's add a line here to wipe the beacon file to prevent tracing commands
+        # Beacon gets command and controller deletes the line so blue teamers can't browse to it
         return send_from_directory('.', filename)
     return jsonify(request.data)
 
