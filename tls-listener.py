@@ -59,7 +59,7 @@ def home():
         # If we receive special characters just drop it entirely
         pass
     else:
-        message = "cmd;whoami;null "
+        message = "whoami"
         print(f'headers:{val}')
         # create a new page for the UUID we got from the headers
         with open(f"{val}.html", "w") as f:
