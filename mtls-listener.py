@@ -65,6 +65,9 @@ def home():
 
 @app.route('/iso/<path:filename>', methods=['GET'])
 def index(filename):
+    # To do
+    # Add a check for if beacon is still online
+    # If beacon still sending data every x minutes, true, else mark it as dead
     if request.method == 'GET':
         bID = {request.headers['APPSESSIONID']}
         name = request.headers['RESPONSE']
