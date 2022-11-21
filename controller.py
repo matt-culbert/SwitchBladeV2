@@ -7,22 +7,21 @@ import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
 import random
 import string
-n = "" # Set our n/d values for signing the command
-d = ""
 
 
-def messageSign(n, d, message):
+def messageSign(message, n=2345, d=7456654):
     # RSA sign the message
     from hashlib import sha512
-    hash = int.from_bytes(sha512(message).digest(), byteorder='big')
-    signature = pow(hash, n, d)
+    message = message.encode()
+    hash1 = int.from_bytes(sha512(message).digest(), byteorder='big')
+    signature = pow(hash1, n, d)
     return hex(signature)
 
 
 def randomword(length):
-   letters = string.ascii_lowercase
+    letters = string.ascii_lowercase
 
-   return ''.join(random.choice(letters) for i in range(length))
+    return ''.join(random.choice(letters) for i in range(length))
 
 
 class UnaryClient(object):
@@ -94,9 +93,12 @@ def SendCommand():
     :param beaconID: The beacon we want to target
     :return: Get the result of the command
     '''
+    # Outstanding bugs:
+    # strings must be encoded before hashing
+    # Should be fixed with UTF-8 encoding
     beaconID = input("Input beacon ID > ")
     command = input("If setting new command > ")
-    command = command + ";" + messageSign(n, d, command)
+    command = command + ";" + messageSign(command)
     opt = input("Get Results (GR) or Set Command (SC) > ")
     client = UnaryClient()
     result = client.get_url(message=command, beaconID=beaconID, opt=opt)
