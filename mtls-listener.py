@@ -9,6 +9,7 @@ import time
 import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
 import redis  # Make sure to install and start the redis server
+# sudo systemctl start redis-server.service
 import string
 
 conn = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -109,7 +110,7 @@ def serve():
     context.verify_mode = ssl.CERT_REQUIRED
     context.load_verify_locations('ca-crt.pem')
     context.load_cert_chain('server.crt', 'server.key')
-    app.run('0.0.0.0', 8080, ssl_context=context)
+    app.run(host='192.168.1.166', ssl_context=context)
     server.wait_for_termination()
 
 

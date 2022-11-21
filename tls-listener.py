@@ -6,6 +6,7 @@ from concurrent import futures
 import protobuff_pb2_grpc as pb2_grpc
 import protobuff_pb2 as pb2
 import redis  # Make sure to install and start the redis server
+# sudo systemctl start redis-server.service
 import string
 
 conn = redis.StrictRedis(host='localhost', port=6379, db=0)
