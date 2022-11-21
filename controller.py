@@ -131,7 +131,19 @@ if __name__ == '__main__':
                        "or start listeners (3) "
                        "or run nginx (4) "
                        "or start a staged dropper (5) > ")
-        if choice == '1':
+        match choice:
+            case ['1']:
+                BobTheBuilder()
+            case ['2']:
+                SendCommand()
+            case ['3']:
+                startListener()
+            case ['4']:
+                startMTLS()
+            case ['5']:
+                bacon = input('Enter beacon name > ')
+                stagedDropper(bacon)
+        '''if choice == '1':
             BobTheBuilder()
         if choice == '2':
             SendCommand()
@@ -141,4 +153,5 @@ if __name__ == '__main__':
             startMTLS()
         if choice == '5':
             bacon = input('Enter beacon name > ')
-            stagedDropper(bacon)
+            stagedDropper(bacon)'''
+
