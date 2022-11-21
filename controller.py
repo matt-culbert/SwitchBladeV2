@@ -98,7 +98,7 @@ def SendCommand():
     # Should be fixed with UTF-8 encoding
     beaconID = input("Input beacon ID > ")
     command = input("If setting new command > ")
-    command = command + ";" + messageSign(command)
+    command = command #+ ";" + messageSign(command)
     opt = input("Get Results (GR) or Set Command (SC) > ")
     client = UnaryClient()
     result = client.get_url(message=command, beaconID=beaconID, opt=opt)
