@@ -1,0 +1,7 @@
+\bin
+\beacon
+\_pycache_
+\.vscode
+\.idea
+\obj
+\venv
