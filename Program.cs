@@ -20,21 +20,20 @@ namespace Testing
 
             Task<string> post = PostMe("https://eoqqzdfuzmgq7gg.m.pipedream.net/", whoami);
 
-            Console.WriteLine(post);
+            //Console.WriteLine(post);
 
-            //Task<string> stat = GetMe("http://192.168.1.254:8000");
-            string result = GetRequest("https://www.example.com").GetAwaiter().GetResult(); 
+            //Task<string> stat = GetMe("https://eoqqzdfuzmgq7gg.m.pipedream.net/");
 
             //Console.WriteLine(stat);
         }
         
-        private static async Task<string> GetRequest(string url) 
+        public static async Task<string> GetMe(string url) 
         { 
-            using (var client = new HttpClient()) 
-            { 
-                var response = await client.GetAsync(url); 
-                return await response.Content.ReadAsStringAsync(); 
-            } 
+            //GET the object to the specified URI 
+            var response = await client.GetAsync(url);
+            //Read back the answer from server
+            var responseString = await response.Content.ReadAsStringAsync();
+            return responseString;
         } 
         public static async Task<string> PostMe(string url, string whoami)
         {
